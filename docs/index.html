@@ -323,6 +323,30 @@
             transform: translateY(-2px);
         }
 
+        .btn-playstore {
+            background: #ffffff;
+            color: #030712;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            padding: 9px 22px;
+            border-radius: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            box-shadow: 0 4px 20px rgba(255, 255, 255, 0.15);
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .btn-playstore:hover {
+            background: #ffffff;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(255, 255, 255, 0.3), 0 0 20px rgba(56, 189, 248, 0.3);
+        }
+
+        .btn-playstore svg {
+            flex-shrink: 0;
+        }
+
         /* Trust Grid Badges */
         .trust-grid {
             display: grid;
@@ -813,11 +837,20 @@
             </p>
 
             <div class="hero-actions">
-                <a href="#apps" class="btn btn-primary">
-                    <span>⚡ Explore Our Apps</span>
+                <a href="https://play.google.com/store/apps/details?id=com.expensemanagerai" target="_blank" rel="noopener noreferrer" class="btn btn-playstore">
+                    <svg width="22" height="22" viewBox="0 0 512 512">
+                        <path fill="#4285F4" d="M32.5 13.7c-4.4 4.7-7 11.5-7 19.8v445c0 8.3 2.6 15.1 7 19.8l232-242.3L32.5 13.7z"/>
+                        <path fill="#FBBC04" d="M336.8 322.2l-72.3-73.9 72.3-73.9 83.2 47.4c23.7 13.5 23.7 35.6 0 49.1l-83.2 47.4z"/>
+                        <path fill="#EA4335" d="M336.8 322.2L264.5 248.3 32.5 498.3c7.8 8.3 20.6 9.3 34.6 1.4l269.7-177.5z"/>
+                        <path fill="#34A853" d="M336.8 174.4L67.1 22.3c-14-7.9-26.8-6.9-34.6 1.4l232 224.6 72.3-73.9z"/>
+                    </svg>
+                    <div style="text-align: left; line-height: 1.15;">
+                        <span style="font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.85; display: block; font-weight: 600;">GET IT ON</span>
+                        <span style="font-size: 1.05rem; font-weight: 800;">Google Play</span>
+                    </div>
                 </a>
-                <a href="#philosophy" class="btn btn-secondary">
-                    <span>Our Privacy Commitment</span>
+                <a href="#apps" class="btn btn-secondary">
+                    <span>⚡ Explore Apps Suite</span>
                 </a>
             </div>
 
@@ -901,12 +934,21 @@
             </div>
 
             <!-- Action Buttons -->
-            <div style="display: flex; gap: 16px; flex-wrap: wrap; margin-top: 8px;">
-                <a href="policy/smart-money/privacy-policy.html" class="btn btn-primary">
-                    <span>Read Privacy Policy</span>
+            <div style="display: flex; gap: 16px; flex-wrap: wrap; margin-top: 12px; align-items: center;">
+                <a href="https://play.google.com/store/apps/details?id=com.expensemanagerai" target="_blank" rel="noopener noreferrer" class="btn btn-playstore">
+                    <svg width="22" height="22" viewBox="0 0 512 512">
+                        <path fill="#4285F4" d="M32.5 13.7c-4.4 4.7-7 11.5-7 19.8v445c0 8.3 2.6 15.1 7 19.8l232-242.3L32.5 13.7z"/>
+                        <path fill="#FBBC04" d="M336.8 322.2l-72.3-73.9 72.3-73.9 83.2 47.4c23.7 13.5 23.7 35.6 0 49.1l-83.2 47.4z"/>
+                        <path fill="#EA4335" d="M336.8 322.2L264.5 248.3 32.5 498.3c7.8 8.3 20.6 9.3 34.6 1.4l269.7-177.5z"/>
+                        <path fill="#34A853" d="M336.8 174.4L67.1 22.3c-14-7.9-26.8-6.9-34.6 1.4l232 224.6 72.3-73.9z"/>
+                    </svg>
+                    <div style="text-align: left; line-height: 1.15;">
+                        <span style="font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.85; display: block; font-weight: 600;">GET IT ON</span>
+                        <span style="font-size: 1.05rem; font-weight: 800;">Google Play</span>
+                    </div>
                 </a>
-                <a href="#compliance" class="btn btn-secondary">
-                    <span>In-App Purchases & Terms</span>
+                <a href="policy/smart-money/privacy-policy.html" class="btn btn-secondary">
+                    <span>Read Privacy Policy</span>
                 </a>
             </div>
         </section>
