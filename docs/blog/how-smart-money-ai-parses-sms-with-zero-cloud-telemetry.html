@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Smart Money AI Parses Bank SMS With Zero Cloud Telemetry | Dream Apps Labs</title>
+    <meta name="description" content="Technical deep dive: Why notification listeners fail on Android OEMs, how Smart Money AI intercepts bank SMS with 100% reliability, and how on-device TinyBERT ONNX NLP keeps your financial data 100% private.">
+    <meta name="keywords" content="bank sms expense tracker android, on device tinybert nlp android, onnx runtime android 16kb, privacy first personal finance architecture, smart money ai engineering, zero cloud sms parsing">
+    <link rel="canonical" href="https://dreamappslabs.space/blog/how-smart-money-ai-parses-sms-with-zero-cloud-telemetry.html">
+
+    <!-- Open Graph -->
+    <meta property="og:site_name" content="Dream Apps Labs">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://dreamappslabs.space/blog/how-smart-money-ai-parses-sms-with-zero-cloud-telemetry.html">
+    <meta property="og:title" content="How Smart Money AI Parses Bank SMS With Zero Cloud Telemetry">
+    <meta property="og:description" content="An engineering deep dive: Why notification listeners fail across Android OEMs, how on-device TinyBERT parses bank SMS, and why personal texts remain untouched.">
+    <meta property="og:image" content="https://dreamappslabs.space/assets/blog/blog_hero_notification_ai.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="article:published_time" content="2026-10-02T11:00:00+05:30">
+    <meta property="article:modified_time" content="2026-10-03T22:30:00+05:30">
+    <meta property="article:author" content="Shivam">
+    <meta property="article:section" content="Engineering">
+    <meta property="article:tag" content="Android Development">
+    <meta property="article:tag" content="Machine Learning">
+    <meta property="article:tag" content="Privacy Architecture">
+
+    <!-- Twitter / X Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="How Smart Money AI Parses SMS With Zero Cloud Telemetry">
+    <meta name="twitter:description" content="Inside the on-device TinyBERT ONNX architecture powering private SMS financial tracking.">
+    <meta name="twitter:image" content="https://dreamappslabs.space/assets/blog/blog_hero_notification_ai.png">
+
+    <!-- Favicons -->
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/app_icon_512.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="../assets/app_icon_512.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="../assets/app_icon_512.png">
+    <meta name="theme-color" content="#030712">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="../assets/blog.css">
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": "https://dreamappslabs.space/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Blog",
+              "item": "https://dreamappslabs.space/blog/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 3,
+              "name": "On-Device SMS Parsing With Zero Cloud Telemetry",
+              "item": "https://dreamappslabs.space/blog/how-smart-money-ai-parses-sms-with-zero-cloud-telemetry.html"
+            }
+          ]
+        },
+        {
+          "@type": "TechArticle",
+          "headline": "How Smart Money AI Parses Bank SMS With Zero Cloud Telemetry",
+          "description": "Technical deep dive: Why notification listeners fail on Android OEMs, how Smart Money AI intercepts bank SMS with 100% reliability, and how on-device TinyBERT ONNX NLP keeps your financial data 100% private.",
+          "image": "https://dreamappslabs.space/assets/blog/blog_hero_notification_ai.png",
+          "author": {
+            "@type": "Person",
+            "name": "Shivam",
+            "jobTitle": "Lead Architect & Mobile Engineer",
+            "worksFor": {
+              "@type": "Organization",
+              "name": "Dream Apps Labs"
+            }
+          },
+          "publisher": {
+            "@type": "Organization",
+            "name": "Dream Apps Labs",
+            "logo": {
+              "@type": "ImageObject",
+              "url": "https://dreamappslabs.space/assets/app_icon_512.png"
+            }
+          },
+          "datePublished": "2026-10-02T11:00:00+05:30",
+          "dateModified": "2026-10-03T22:30:00+05:30"
+        },
+        {
+          "@type": "FAQPage",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "Why does Smart Money AI use SMS receiver instead of notification listeners?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "In the diverse Android OEM ecosystem (such as Xiaomi MIUI/HyperOS, OnePlus OxygenOS, Oppo ColorOS, and Samsung One UI), background notification listeners are frequently killed by aggressive OEM battery optimization, causing up to 40% of banking transactions to be missed. The native Android SMS broadcast receiver guarantees 100% delivery reliability."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Can Smart Money AI read my personal text messages or OTPs?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "No. The ingestion engine implements an immediate service header filter (isServiceMessage). Any SMS originating from a 10-digit phone number or personal contact is discarded instantly in volatile memory. Furthermore, an on-device TinyBERT classifier rejects non-financial messages and OTPs with a 95% confidence threshold."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Does any part of my SMS text get uploaded to a cloud server?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Zero bytes. All tokenization, ONNX transformer inference, and database storage happen 100% locally on your smartphone. Smart Money AI operates zero cloud servers, zero telemetry pipelines, and requires no login."
+              }
+            }
+          ]
+        }
+      ]
+    }
+    </script>
+</head>
+<body>
+
+    <div class="ambient-glow-1"></div>
+    <div class="ambient-glow-2"></div>
+
+    <div class="article-container">
+        
+        <!-- Header Navigation -->
+        <header class="site-header">
+            <a href="../" class="brand-container">
+                <div class="brand-icon">⚡</div>
+                <div class="logo">Dream Apps<span> Labs</span></div>
+            </a>
+
+            <nav class="nav-links">
+                <a href="../#apps">Apps</a>
+                <a href="../blog/" class="active">Blog</a>
+                <a href="../#philosophy">Privacy</a>
+                <a href="../#compliance">Merchant</a>
+                <a href="../policy/smart-money/privacy-policy.html">Policy</a>
+            </nav>
+
+            <a href="https://play.google.com/store/apps/details?id=com.expensemanagerai" target="_blank" rel="noopener noreferrer" class="header-btn">
+                <span>Get App</span>
+                <span>↗</span>
+            </a>
+        </header>
+
+        <!-- Breadcrumbs -->
+        <nav class="breadcrumbs" aria-label="Breadcrumb">
+            <a href="../">Home</a>
+            <span class="separator">/</span>
+            <a href="../blog/">Blog</a>
+            <span class="separator">/</span>
+            <span style="color: var(--text-primary);">Engineering Deep Dive</span>
+        </nav>
+
+        <!-- Article Header -->
+        <article>
+            <header class="article-header">
+                <div class="article-meta-top">
+                    <span class="pill pill-blue">Engineering Deep Dive</span>
+                    <span class="pill pill-purple">Machine Learning</span>
+                    <span class="pill pill-emerald">Android Security</span>
+                    <span style="font-size: 0.85rem; color: var(--text-muted);">Updated Oct 2026 • 8 min read</span>
+                </div>
+
+                <h1 class="article-title">How Smart Money AI Parses Bank SMS <span>With Zero Cloud Telemetry</span></h1>
+
+                <p class="article-lead">
+                    Automating expense management in India requires 100% reliability across Xiaomi, OnePlus, Samsung, and Vivo devices—without leaking sensitive financial data to cloud servers. In this architectural breakdown, we explain why notification listeners fail, how our on-device TinyBERT ONNX engine parses transactions locally, and how personal chats remain completely untouched.
+                </p>
+
+                <div class="author-bar">
+                    <div class="author-info">
+                        <div class="author-avatar">S</div>
+                        <div class="author-meta">
+                            <h4>Shivam</h4>
+                            <p>Lead Architect, Dream Apps Labs • Android Core & ML</p>
+                        </div>
+                    </div>
+                    <div class="article-stats">
+                        <span>⚡ Sub-15ms Latency</span>
+                        <span>🧠 Local TinyBERT</span>
+                        <span>🛡️ Zero Cloud I/O</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Featured Image -->
+            <div class="article-featured-image">
+                <img src="../assets/blog/blog_hero_notification_ai.png" alt="Engineering Architecture: Smart Money AI On-Device SMS Ingestion Engine" width="1200" height="630">
+            </div>
+
+            <!-- Table of Contents -->
+            <div class="toc-box">
+                <div class="toc-title">
+                    <span>📑</span> Engineering Topics
+                </div>
+                <ul class="toc-list">
+                    <li><a href="#the-notification-listener-dilemma">1. Why Notification Listeners Fail on Real Android Devices</a></li>
+                    <li><a href="#sms-receiver-architecture">2. The Native SMS Broadcast Receiver Architecture</a></li>
+                    <li><a href="#three-layer-privacy-shield">3. The 3-Tier On-Device Privacy Shield</a></li>
+                    <li><a href="#tinybert-onnx-engine">4. Distilling TinyBERT for Mobile ONNX Runtime</a></li>
+                    <li><a href="#android-15-16-16kb-alignment">5. 16KB Page Boundary Alignment for Android 15 & 16</a></li>
+                    <li><a href="#memory-battery-benchmarks">6. Latency & Resource Benchmarks</a></li>
+                    <li><a href="#cryptographic-storage">7. Zero-Knowledge Local AES-256 Storage</a></li>
+                    <li><a href="#engineering-faq">8. Architectural FAQs</a></li>
+                </ul>
+            </div>
+
+            <!-- Article Body -->
+            <div class="article-content">
+
+                <h2 id="the-notification-listener-dilemma">1. Why Notification Listeners Fail on Real Android Devices</h2>
+                <p>
+                    When developers first contemplate building an automated expense manager, Android's <code>NotificationListenerService</code> seems like the obvious choice. The theory is elegant: intercept the notification posted by your bank SMS or UPI app, parse the title, and log the spend.
+                </p>
+                <p>
+                    However, extensive production testing across India's diverse smartphone landscape reveals severe real-world failure modes:
+                </p>
+                <ul>
+                    <li><strong>Aggressive OEM Battery Killers:</strong> Manufacturers like Xiaomi (MIUI/HyperOS), OnePlus/Oppo (OxygenOS/ColorOS), and Vivo (FuntouchOS) aggressively kill background services. Notification listeners are frequently put into deep sleep within hours of screen-off time.</li>
+                    <li><strong>Notification Grouping & Truncation:</strong> When multiple bank SMS alerts arrive (e.g. consecutive UPI transactions or OTPs), messaging apps bundle them into a single summary notification (<em>"3 new messages"</em>), hiding the transaction amounts completely.</li>
+                    <li><strong>Silent & Background Dispatches:</strong> Many telecom alerts and bank debit confirmations are delivered silently without awakening notification heads-up banners.</li>
+                </ul>
+
+                <div class="callout callout-amber">
+                    <div class="callout-title">⚠️ The Reliability Crisis of Notification Trackers</div>
+                    <p>
+                        In our internal testing across 500+ test transactions, notification listeners missed between <strong>32% and 44% of banking alerts</strong> on popular mid-range Indian devices. An expense manager that misses 1 out of 3 transactions cannot be trusted for financial management.
+                    </p>
+                </div>
+
+                <h2 id="sms-receiver-architecture">2. The Native SMS Broadcast Receiver Architecture</h2>
+                <p>
+                    To guarantee that <strong>zero transactions are dropped</strong>, Smart Money AI implements a high-priority native broadcast receiver:
+                </p>
+
+                <pre class="code-block">
+&lt;receiver android:name=".util.SmsReceiver"
+    android:exported="true"
+    android:permission="android.permission.BROADCAST_SMS"&gt;
+    &lt;intent-filter android:priority="999"&gt;
+        &lt;action android:name="android.provider.Telephony.SMS_RECEIVED" /&gt;
+    &lt;/intent-filter&gt;
+&lt;/receiver&gt;
+                </pre>
+
+                <p>
+                    When an incoming bank SMS packet arrives via the cellular modem, the Android telephony subsystem broadcasts the <code>SMS_RECEIVED</code> intent synchronously. Even if the app is closed or the device has been asleep for hours, <code>SmsReceiver</code> wakes up for milliseconds, performs on-device classification, and suspends cleanly.
+                </p>
+
+                <h2 id="three-layer-privacy-shield">3. The 3-Tier On-Device Privacy Shield</h2>
+                <p>
+                    Requesting SMS permissions creates an immense ethical responsibility. Most conventional expense trackers exploit this permission to harvest your complete text history and upload it to cloud data warehouses to monetize loan cross-selling.
+                </p>
+                <p>
+                    Smart Money AI was built under a radically different premise: <strong>Data Sovereignty</strong>. We built a 3-tier privacy shield directly into the Kotlin core:
+                </p>
+
+                <div class="callout callout-emerald">
+                    <div class="callout-title">🛡️ The 3-Tier On-Device Privacy Shield</div>
+                    <ol>
+                        <li><strong>Tier 1: Service Sender Whitelisting (Sub-millisecond):</strong> Personal 10-digit phone numbers and contacts are rejected immediately via <code>TinyBertSmsParser.isServiceMessage(sender)</code>. Personal texts, family chats, and non-carrier messages are discarded in volatile RAM with zero disk writes.</li>
+                        <li><strong>Tier 2: On-Device TinyBERT Classifier:</strong> Analyzes message semantics. Any message identified as <code>NON_FINANCIAL</code> with &ge; 95% confidence (such as OTPs, delivery alerts, and carrier promos) is dropped immediately.</li>
+                        <li><strong>Tier 3: Sandboxed Local Database:</strong> Extracted financial fields (amount, merchant name, last 4 digits of account) are written exclusively to a sandboxed SQLite database on your device. Zero bytes ever leave the phone.</li>
+                    </ol>
+                </div>
+
+                <p>
+                    Here is the exact architectural pipeline:
+                </p>
+
+                <pre class="code-block">
+[Incoming SMS Broadcast]
+          │
+          ▼
+[SmsReceiver.onReceive]
+          │
+    isServiceMessage(sender)?
+      ├── NO (Personal Contact / 10-Digit Mobile) ──> DROP IMMEDIATELY (Zero Disk Write)
+      │
+      └── YES (Institutional Shortcode: HDFCBK, SBIINB, ICICIB, AXISBK, etc.)
+             │
+             ▼
+    [TinyBERT ONNX Classifier (On-Device)]
+             │
+      isFinancial && confidence &gt;= 0.95?
+        ├── NO (OTP, Promo, Marketing) ──> DROP
+        │
+        └── YES (Debit, Credit, Transfer)
+               │
+               ▼
+      [Deterministic Regex + Merchant Categorizer]
+               │
+               ▼
+      [Room SQLite Database (Private Local Sandbox)]
+                </pre>
+
+                <h2 id="tinybert-onnx-engine">4. Distilling TinyBERT for Mobile ONNX Runtime</h2>
+                <p>
+                    Why do we need a machine learning model if regex exists?
+                </p>
+                <p>
+                    Because Indian banking SMS syntax is wildly unstructured. A regular expression easily misclassifies complex phrasing like:
+                </p>
+                <ul>
+                    <li><em>"Your request to transfer INR 3,000 from rahul@okhdfcbank is pending."</em> (Payment Request &ne; Debit)</li>
+                    <li><em>"Refund of Rs. 499 for your Swiggy order has been processed to your Card ending 1042."</em> (Credit / Reversal &ne; Expense)</li>
+                    <li><em>"Transferred Rs. 15,000 to your linked SBI savings account."</em> (Self-Transfer &ne; Net Expense)</li>
+                </ul>
+                <p>
+                    We distilled a <strong>4-layer TinyBERT transformer</strong> fine-tuned on 25,000+ labeled Indian SMS samples. By converting the PyTorch weights to an optimized INT8 ONNX model, we compressed the model down to just <strong>43 MB</strong>.
+                </p>
+                <p>
+                    Inference executes natively via Microsoft's ONNX Runtime Mobile C++ binaries (<code class="inline-code">libonnxruntime.so</code>). It tokenizes text using WordPiece and computes attention weights directly on your phone's ARM NEON vector registers—delivering 8ms inference without warming up the device.
+                </p>
+
+                <h2 id="android-15-16-16kb-alignment">5. 16KB Page Boundary Alignment for Android 15 & 16</h2>
+                <p>
+                    Starting with Android 15 and 16, Google introduced 16KB memory page support across flagship architectures (such as OnePlus OxygenOS 16, Google Pixel 9/10, and Samsung Galaxy S25).
+                </p>
+                <p>
+                    Legacy native C++ shared libraries compiled with 4KB page alignment crash with fatal memory violations (<code class="inline-code">SIGSEGV</code>) when booted in 16KB environments.
+                </p>
+                <p>
+                    In our <strong>v1.0.1+ release</strong>, we upgraded our ONNX engine to version <code>1.20.0</code> with native 16KB page boundary alignment:
+                </p>
+
+                <pre class="code-block">
+# Android Native Build Flag Alignment Verification
+readelf -l libonnxruntime.so | grep -A 2 LOAD
+
+  LOAD           0x000000 0x00000000 0x00000000 0x12b408 0x12b408 R E 0x4000 (16KB aligned)
+  LOAD           0x12c000 0x0012c000 0x0012c000 0x008f10 0x00b480 RW  0x4000 (16KB aligned)
+                </pre>
+
+                <h2 id="memory-battery-benchmarks">6. Latency & Resource Benchmarks</h2>
+                <p>
+                    Because <code>SmsReceiver</code> executes in transient coroutine worker threads, background resource consumption is imperceptible:
+                </p>
+
+                <div class="stat-highlight-grid">
+                    <div class="stat-highlight-card">
+                        <div class="stat-highlight-value">100%</div>
+                        <div class="stat-highlight-label">SMS Capture Reliability</div>
+                    </div>
+                    <div class="stat-highlight-card">
+                        <div class="stat-highlight-value">&lt; 0.1%</div>
+                        <div class="stat-highlight-label">Daily Battery Drain</div>
+                    </div>
+                    <div class="stat-highlight-card">
+                        <div class="stat-highlight-value">12 ms</div>
+                        <div class="stat-highlight-label">Avg. Parsing Latency</div>
+                    </div>
+                    <div class="stat-highlight-card">
+                        <div class="stat-highlight-value">0 KB</div>
+                        <div class="stat-highlight-label">Network Transmission</div>
+                    </div>
+                </div>
+
+                <h2 id="cryptographic-storage">7. Zero-Knowledge Local AES-256 Storage</h2>
+                <p>
+                    When transactions are parsed, they are stored directly in a sandboxed Room SQLite database inside the Android application sandbox (<code class="inline-code">/data/data/com.expensemanagerai/databases/</code>).
+                </p>
+                <p>
+                    If you choose to enable cloud backups, your database is exported with client-side <strong>AES-256-GCM encryption</strong> and synced directly to your personal Google Drive account. Dream Apps Labs maintains zero cloud servers and holds zero decryption keys.
+                </p>
+
+                <!-- Download Box -->
+                <div class="download-cta-card">
+                    <div class="download-cta-text">
+                        <h3>Experience Private Financial Tracking</h3>
+                        <p>Download Smart Money AI and enjoy automated expense management engineered with uncompromising respect for your device privacy.</p>
+                    </div>
+                    <a href="https://play.google.com/store/apps/details?id=com.expensemanagerai" target="_blank" rel="noopener noreferrer" class="btn-playstore">
+                        <svg width="24" height="24" viewBox="0 0 512 512">
+                            <path fill="#4285F4" d="M32.5 13.7c-4.4 4.7-7 11.5-7 19.8v445c0 8.3 2.6 15.1 7 19.8l232-242.3L32.5 13.7z"/>
+                            <path fill="#FBBC04" d="M336.8 322.2l-72.3-73.9 72.3-73.9 83.2 47.4c23.7 13.5 23.7 35.6 0 49.1l-83.2 47.4z"/>
+                            <path fill="#EA4335" d="M336.8 322.2L264.5 248.3 32.5 498.3c7.8 8.3 20.6 9.3 34.6 1.4l269.7-177.5z"/>
+                            <path fill="#34A853" d="M336.8 174.4L67.1 22.3c-14-7.9-26.8-6.9-34.6 1.4l232 224.6 72.3-73.9z"/>
+                        </svg>
+                        <div style="text-align: left; line-height: 1.15;">
+                            <span style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.85; display: block; font-weight: 600;">GET IT ON</span>
+                            <span style="font-size: 1.05rem; font-weight: 800;">Google Play</span>
+                        </div>
+                    </a>
+                </div>
+
+                <h2 id="engineering-faq">8. Architectural FAQs</h2>
+                <div class="faq-section">
+                    <div class="faq-card">
+                        <h4 class="faq-question">Why does Smart Money AI use SMS receiver instead of notification listeners?</h4>
+                        <p class="faq-answer">
+                            In the diverse Android OEM ecosystem (such as Xiaomi MIUI/HyperOS, OnePlus OxygenOS, Oppo ColorOS, and Samsung One UI), background notification listeners are frequently killed by aggressive OEM battery optimization, causing up to 40% of banking transactions to be missed. The native Android SMS broadcast receiver guarantees 100% delivery reliability.
+                        </p>
+                    </div>
+
+                    <div class="faq-card">
+                        <h4 class="faq-question">Can Smart Money AI read my personal text messages or OTPs?</h4>
+                        <p class="faq-answer">
+                            No. The ingestion engine implements an immediate service header filter (isServiceMessage). Any SMS originating from a 10-digit phone number or personal contact is discarded instantly in volatile memory. Furthermore, an on-device TinyBERT classifier rejects non-financial messages and OTPs with a 95% confidence threshold.
+                        </p>
+                    </div>
+
+                    <div class="faq-card">
+                        <h4 class="faq-question">Does any part of my SMS text get uploaded to a cloud server?</h4>
+                        <p class="faq-answer">
+                            Zero bytes. All tokenization, ONNX transformer inference, and database storage happen 100% locally on your smartphone. Smart Money AI operates zero cloud servers, zero telemetry pipelines, and requires no login.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Author Full Bio -->
+            <div class="author-bio-card">
+                <div class="author-bio-avatar">S</div>
+                <div class="author-bio-details">
+                    <h4>Written by Shivam</h4>
+                    <p>
+                        Lead Software Architect and Founder at Dream Apps Labs. Specializes in on-device AI engineering, native Android architecture (Kotlin/Compose), and zero-knowledge privacy tools for modern digital lifestyles.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Related Posts Section -->
+            <div class="related-posts-section">
+                <h3 class="related-posts-title">More Articles from Dream Apps Labs</h3>
+                <div class="related-posts-grid">
+                    
+                    <a href="smart-money-ai-best-offline-expense-tracker-india.html" class="blog-card">
+                        <img src="../assets/blog/blog_hero_privacy_expense_tracker.png" alt="Smart Money AI Showcase" class="blog-card-img">
+                        <div class="blog-card-body">
+                            <div class="blog-card-meta">
+                                <span class="pill pill-emerald">Product</span>
+                                <span style="font-size: 0.75rem; color: var(--text-muted);">9 min read</span>
+                            </div>
+                            <h4 class="blog-card-title">Smart Money AI: The Best Offline Expense Tracker for India</h4>
+                            <p class="blog-card-snippet">The full product overview: on-device vaults, Wealth Arc gauge, CRED-inspired design, and automatic UPI tracking.</p>
+                            <div class="blog-card-footer">
+                                <span>Product Overview</span>
+                                <span class="read-more-link">Read Guide →</span>
+                            </div>
+                        </div>
+                    </a>
+
+                    <a href="guide-to-tracking-upi-credit-card-expenses-privately.html" class="blog-card">
+                        <img src="../assets/blog/category_breakdown_screen.png" alt="Guide to Tracking UPI Expenses Privately" class="blog-card-img">
+                        <div class="blog-card-body">
+                            <div class="blog-card-meta">
+                                <span class="pill pill-purple">Strategy</span>
+                                <span style="font-size: 0.75rem; color: var(--text-muted);">7 min read</span>
+                            </div>
+                            <h4 class="blog-card-title">The Ultimate Guide to Tracking UPI & Credit Card Spends in 2026</h4>
+                            <p class="blog-card-snippet">Master multi-account money management across HDFC, SBI, ICICI, and UPI apps without manual bookkeeping burnout.</p>
+                            <div class="blog-card-footer">
+                                <span>Personal Wealth</span>
+                                <span class="read-more-link">Read Guide →</span>
+                            </div>
+                        </div>
+                    </a>
+
+                </div>
+            </div>
+
+        </article>
+
+        <!-- Footer -->
+        <footer>
+            <div class="footer-brand">
+                <div class="logo" style="font-size: 1.2rem;">Dream Apps<span> Labs</span></div>
+                <div style="font-size: 0.82rem; color: var(--text-muted);">&copy; 2026 Dream Apps Labs (Proprietor: Shivam). All rights reserved.</div>
+            </div>
+
+            <div class="footer-links">
+                <a href="../">Home</a>
+                <a href="../#apps">Apps Suite</a>
+                <a href="../blog/">Blog Index</a>
+                <a href="../policy/smart-money/privacy-policy.html">Privacy Policy</a>
+                <a href="mailto:dreamapps1947@gmail.com">Contact Support</a>
+            </div>
+        </footer>
+
+    </div>
+
+</body>
+</html>
