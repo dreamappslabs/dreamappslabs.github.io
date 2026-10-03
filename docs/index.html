@@ -804,6 +804,105 @@
             border-radius: 6px;
             color: var(--text-secondary);
         }
+
+        /* Blog Preview Showcase Section */
+        .blog-preview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+            margin-bottom: 60px;
+        }
+
+        .blog-preview-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            overflow: hidden;
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.25s ease;
+            backdrop-filter: blur(12px);
+        }
+
+        .blog-preview-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--card-border-glow);
+            box-shadow: 0 16px 36px rgba(0, 0, 0, 0.4);
+        }
+
+        .blog-preview-img {
+            width: 100%;
+            height: 190px;
+            object-fit: cover;
+            background: #090d16;
+        }
+
+        .blog-preview-body {
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .blog-preview-meta {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .blog-pill-tag {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 6px;
+            background: rgba(0, 255, 135, 0.1);
+            color: var(--accent-emerald);
+            border: 1px solid rgba(0, 255, 135, 0.25);
+        }
+
+        .blog-preview-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #ffffff;
+            line-height: 1.35;
+            margin-bottom: 10px;
+        }
+
+        .blog-preview-desc {
+            color: var(--text-secondary);
+            font-size: 0.92rem;
+            line-height: 1.6;
+            margin-bottom: 18px;
+            flex-grow: 1;
+        }
+
+        .blog-preview-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            padding-top: 14px;
+            font-size: 0.84rem;
+            color: var(--text-muted);
+        }
+
+        .blog-read-btn {
+            color: var(--accent-blue);
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            transition: color 0.2s;
+        }
+
+        .blog-preview-card:hover .blog-read-btn {
+            color: var(--accent-emerald);
+        }
     </style>
 </head>
 <body>
@@ -823,6 +922,7 @@
 
             <nav class="nav-links">
                 <a href="#apps">Applications</a>
+                <a href="blog/">Blog</a>
                 <a href="#pipeline">In Development</a>
                 <a href="#philosophy">Privacy Philosophy</a>
                 <a href="#compliance">Legal & Contact</a>
@@ -1077,6 +1177,76 @@
             </a>
         </section>
 
+        <!-- Blog & Technical Insights Showcase -->
+        <div id="blog" class="section-header">
+            <div>
+                <h2 class="section-title">Engineering & Architecture Blog</h2>
+                <p class="section-subtitle">Deep dives into on-device AI, financial privacy, zero-cloud architecture, and Android performance.</p>
+            </div>
+            <a href="blog/" class="mono-pill" style="text-decoration: none; color: var(--accent-blue);">View All Articles →</a>
+        </div>
+
+        <section class="blog-preview-grid">
+            
+            <!-- Blog Card 1 -->
+            <a href="blog/smart-money-ai-best-offline-expense-tracker-india.html" class="blog-preview-card">
+                <img src="assets/blog/blog_hero_privacy_expense_tracker.png" alt="Smart Money AI Best Offline Expense Tracker" class="blog-preview-img">
+                <div class="blog-preview-body">
+                    <div class="blog-preview-meta">
+                        <span class="blog-pill-tag">Product Deep Dive</span>
+                        <span style="font-size: 0.75rem; color: var(--text-muted);">9 min read</span>
+                    </div>
+                    <h3 class="blog-preview-title">Smart Money AI: The Best Offline Expense Tracker for India (No SMS Permission Needed)</h3>
+                    <p class="blog-preview-desc">
+                        Why Indian users are abandoning cloud-based money trackers. Discover how Smart Money AI delivers CRED-inspired financial luxury with 100% on-device AI and zero server telemetry.
+                    </p>
+                    <div class="blog-preview-footer">
+                        <span>By Shivam • Oct 2026</span>
+                        <span class="blog-read-btn">Read Story →</span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Blog Card 2 -->
+            <a href="blog/how-smart-money-ai-tracks-expenses-without-sms-permission.html" class="blog-preview-card">
+                <img src="assets/blog/blog_hero_notification_ai.png" alt="How Smart Money AI Tracks Expenses Without SMS" class="blog-preview-img">
+                <div class="blog-preview-body">
+                    <div class="blog-preview-meta">
+                        <span class="blog-pill-tag" style="background: rgba(56, 189, 248, 0.1); color: var(--accent-blue); border-color: rgba(56, 189, 248, 0.25);">Architecture</span>
+                        <span style="font-size: 0.75rem; color: var(--text-muted);">8 min read</span>
+                    </div>
+                    <h3 class="blog-preview-title">How Smart Money AI Tracks Spends Without High-Risk SMS Permissions</h3>
+                    <p class="blog-preview-desc">
+                        An engineering look into Android NotificationListenerService, 16KB memory page alignment on Android 15/16, and on-device TinyBERT ONNX NLP transformer inference.
+                    </p>
+                    <div class="blog-preview-footer">
+                        <span>By Shivam • Oct 2026</span>
+                        <span class="blog-read-btn">Read Deep Dive →</span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Blog Card 3 -->
+            <a href="blog/guide-to-tracking-upi-credit-card-expenses-privately.html" class="blog-preview-card">
+                <img src="assets/blog/category_breakdown_screen.png" alt="Guide to Tracking UPI Expenses Privately" class="blog-preview-img">
+                <div class="blog-preview-body">
+                    <div class="blog-preview-meta">
+                        <span class="blog-pill-tag" style="background: rgba(129, 140, 248, 0.1); color: var(--accent-purple); border-color: rgba(129, 140, 248, 0.25);">Financial Strategy</span>
+                        <span style="font-size: 0.75rem; color: var(--text-muted);">7 min read</span>
+                    </div>
+                    <h3 class="blog-preview-title">The Ultimate Guide to Tracking UPI, Credit Cards & Banks Privately in 2026</h3>
+                    <p class="blog-preview-desc">
+                        A practical playbook to master multi-account money management across HDFC, SBI, ICICI, and daily UPI QR codes without manual bookkeeping fatigue.
+                    </p>
+                    <div class="blog-preview-footer">
+                        <span>By Shivam • Oct 2026</span>
+                        <span class="blog-read-btn">Read Guide →</span>
+                    </div>
+                </div>
+            </a>
+
+        </section>
+
         <!-- Compliance & Merchant Section -->
         <div id="compliance" class="section-header">
             <div>
@@ -1129,6 +1299,7 @@
 
             <div class="footer-links">
                 <a href="#apps">Apps Suite</a>
+                <a href="blog/">Blog</a>
                 <a href="#pipeline">In Development</a>
                 <a href="policy/smart-money/privacy-policy.html">Privacy Policy</a>
                 <a href="mailto:dreamapps1947@gmail.com">Contact Support</a>
